@@ -23,14 +23,18 @@ export const CardBookDetail: FC<BooksModel> = ({
     <Grid item xs={12} sm={6} md={4} lg={3}>
       <Card sx={{ maxWidth: 320 }}>
         <CardActionArea>
-          <CardMedia
-            component="img"
-            height="200"
-            width="200"
-            loading="lazy"
-            src={volumeInfo.imageLinks.thumbnail}
-            alt={volumeInfo.title}
-          />
+          {volumeInfo.imageLinks ? (
+            <CardMedia
+              component="img"
+              height="200"
+              width="200"
+              loading="lazy"
+              src={volumeInfo.imageLinks.thumbnail}
+              alt={volumeInfo.title}
+            />
+          ) : (
+            <div>Картинки нет</div>
+          )}
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {volumeInfo.title}
