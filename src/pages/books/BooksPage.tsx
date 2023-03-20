@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   FormControl,
   Grid,
   Input,
@@ -23,15 +24,25 @@ export const BooksPage: FC = () => {
   const selectCategories = useAppSelector((state) => state.books.category);
   const filter = useAppSelector((state) => state.books.filter);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
   const [data, setData] = useState<BooksModel[]>([]);
 
   const getBooks = async () => {
-    const result = await BooksApi.getAll({
-      name: searchTerm,
-      category: selectCategories,
-      sort: filter,
-    });
-    setData(result.items);
+    try {
+      setIsLoading(true);
+      const result = await BooksApi.getAll({
+        name: searchTerm,
+        category: selectCategories,
+        sort: filter,
+      });
+      setData(result.items);
+    } catch {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onSubmitGetBooks = (event: FormEvent<HTMLFormElement>) => {
@@ -78,7 +89,9 @@ export const BooksPage: FC = () => {
         </FormControl>
       </form>
 
-      {data?.length > 0 ? (
+      {isLoading && <CircularProgress />}
+
+      {!isError && !isLoading && data?.length > 0 ? (
         <Grid container spacing={1}>
           {data.map((book) => (
             <CardBookDetail key={book.id} {...book} />
