@@ -1,15 +1,36 @@
-import { Box, Button, Grid, Input } from '@mui/material';
+import {
+  Button,
+  FormControl,
+  Grid,
+  Input,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 import { FC, FormEvent, useState } from 'react';
 import { BooksApi } from '../../api/books/books.api';
 import { CardBookDetail } from '../../components/screens/Books/Card/CardBookDetail';
+import { categoriesData } from '../../data/categories.data';
+import { useAction } from '../../hooks/useActions';
+import { useAppSelector } from '../../hooks/useAppSelector';
 import { BooksModel } from '../../models/books.model';
+import { booksActions, TCategoriesFilter } from '../../store/books/books.slice';
 
 export const BooksPage: FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const booksActionsPanel = useAction(booksActions);
+  const searchTerm = useAppSelector((state) => state.books.searchTerm);
+  const selectCategories = useAppSelector((state) => state.books.category);
+  const filter = useAppSelector((state) => state.books.filter);
+
   const [data, setData] = useState<BooksModel[]>([]);
 
   const getBooks = async () => {
-    const result = await BooksApi.getAll({ name: searchTerm });
+    const result = await BooksApi.getAll({
+      name: searchTerm,
+      category: selectCategories,
+      sort: filter,
+    });
     setData(result.items);
   };
 
@@ -18,19 +39,45 @@ export const BooksPage: FC = () => {
     return getBooks();
   };
 
+  const onChangeSelectFilter = (
+    event: SelectChangeEvent<TCategoriesFilter>,
+  ) => {
+    return booksActionsPanel.setCategory(
+      event.target.value as TCategoriesFilter,
+    );
+  };
+
   return (
     <>
-      <Box>
-        <form onSubmit={onSubmitGetBooks}>
+      <form onSubmit={onSubmitGetBooks}>
+        <FormControl sx={{ m: 1 }} variant="standard">
           <Input
             placeholder="Введите название книги"
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => booksActionsPanel.setSearchTerm(e.target.value)}
           />
           <Button disabled={searchTerm.length === 0} type="submit">
-            Найти книгу
+            Найти книги
           </Button>
-        </form>
-      </Box>
+          <FormControl sx={{ m: 1 }} variant="standard">
+            <InputLabel id="demo-customized-select-label">Категория</InputLabel>
+            <Select
+              value={selectCategories}
+              onChange={(event) => onChangeSelectFilter(event)}
+            >
+              {categoriesData.map((category) => (
+                <MenuItem
+                  key={category}
+                  value={category}
+                  disabled={selectCategories === category}
+                >
+                  {category}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </FormControl>
+      </form>
+
       {data?.length > 0 ? (
         <Grid container spacing={1}>
           {data.map((book) => (
