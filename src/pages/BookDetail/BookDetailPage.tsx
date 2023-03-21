@@ -1,7 +1,5 @@
-import { Box, CircularProgress } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import { useGetBookById } from '../../api/books/hooks/useGetBookById';
-import { CardBookDetail } from '../../components/screens/BooksDetail/Card/CardBookDetail';
+import { BookDetailComponent } from '../../components/screens/BooksDetail/BookDetailComponent';
 
 export const BookDetailPage = () => {
   const { path } = useParams();
@@ -12,15 +10,5 @@ export const BookDetailPage = () => {
       </div>
     );
 
-  const { data, isError, isLoading, error } = useGetBookById(path);
-
-  return (
-    <Box>
-      <div>
-        {isLoading && <CircularProgress />}
-        {!isLoading && data && <CardBookDetail {...data} />}
-        {isError && <h1>{error}</h1>}
-      </div>
-    </Box>
-  );
+  return <BookDetailComponent path={path} />;
 };

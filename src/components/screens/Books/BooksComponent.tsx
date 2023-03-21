@@ -11,8 +11,15 @@ export const BooksComponent = () => {
   const selectCategories = useAppSelector((state) => state.books.category);
   const filter = useAppSelector((state) => state.books.filter);
   const [startIndex, setStartIndex] = useState(0);
-  const { fetchData, loadMoreData, data, isLoading, isError } =
-    useGetAllBooks();
+  const {
+    fetchData,
+    loadMoreData,
+    data,
+    isLoading,
+    isError,
+    isMoreData,
+    error,
+  } = useGetAllBooks();
 
   const onSubmitGetBooks = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -23,14 +30,14 @@ export const BooksComponent = () => {
     });
   };
 
-  const onLoadMoreBooks = async () => {
+  const onLoadMoreBooks = () => {
+    setStartIndex((prevState) => prevState + 30);
     loadMoreData({
       category: selectCategories,
       sort: filter,
       name: searchTerm,
       startIndex: startIndex + 30,
     });
-    setStartIndex((prevState) => prevState + 30);
   };
 
   return (
@@ -39,8 +46,8 @@ export const BooksComponent = () => {
       <FormSelectFilters />
 
       {isLoading && <CircularProgress />}
-
-      {!isError && !isLoading && data?.items.length > 0 ? (
+      {isError && <h1>{error}</h1>}
+      {!isLoading && data?.items.length > 0 ? (
         <>
           <div>Найдено {data.totalItems} книг(-и)</div>
           <Grid container spacing={1}>
@@ -48,10 +55,7 @@ export const BooksComponent = () => {
               <CardBookDetail key={book.etag} {...book} />
             ))}
           </Grid>
-          <Button
-            disabled={data.totalItems === data.items.length}
-            onClick={onLoadMoreBooks}
-          >
+          <Button disabled={!isMoreData} onClick={onLoadMoreBooks}>
             Загрузить еще
           </Button>
         </>
