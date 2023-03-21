@@ -29,7 +29,8 @@ export const CardBookDetail: FC<BooksModel> = ({ volumeInfo, id, kind }) => {
             Описание: {volumeInfo.description}
           </Typography>
           <Typography variant="body1" color="text.primary">
-            Автор: {volumeInfo.authors?.join(',')}
+            Автор:
+            {volumeInfo.authors ? volumeInfo.authors?.join(',') : 'не указан'}
           </Typography>
         </CardContent>
       </CardContent>
