@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Layouts } from '../components/ui/Layouts/Layouts';
-import { BooksPage } from '../pages/books/BooksPage';
+import { BookDetailPage } from '../pages/BookDetail/BookDetailPage';
+import { BooksPage } from '../pages/Books/BooksPage';
 import { HomePage } from '../pages/home/HomePage';
 
 export const Navigation = () => {
@@ -23,7 +24,14 @@ export const Navigation = () => {
             </Layouts>
           }
         />
-        <Route path="books/:path" element={<div />} />
+        <Route
+          path="books/:path"
+          element={
+            <Layouts>
+              <BookDetailPage />
+            </Layouts>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

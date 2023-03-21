@@ -1,7 +1,6 @@
 import {
   Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardMedia,
@@ -22,7 +21,7 @@ export const CardBookDetail: FC<BooksModel> = ({
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
       <Card sx={{ maxWidth: 320 }}>
-        <CardActionArea>
+        <CardContent>
           {volumeInfo.imageLinks ? (
             <CardMedia
               component="img"
@@ -46,10 +45,12 @@ export const CardBookDetail: FC<BooksModel> = ({
               {volumeInfo.authors?.join(',')}
             </Typography>
           </CardContent>
-        </CardActionArea>
+        </CardContent>
         <CardActions>
           <Button size="small" color="primary">
-            <Link to={`${id}`}>Перейти</Link>
+            <Link to={`${id}`} target="_blank">
+              Открыть описание
+            </Link>
           </Button>
         </CardActions>
       </Card>

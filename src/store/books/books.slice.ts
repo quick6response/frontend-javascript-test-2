@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { BooksModel } from '../../models/books.model';
 
 export type TCategoriesFilter =
   | 'all'
@@ -14,12 +15,14 @@ interface BooksState {
   searchTerm: string;
   category: TCategoriesFilter;
   filter: TSortFilter;
+  books: BooksModel[];
 }
 
 const initialState: BooksState = {
   searchTerm: '',
   category: 'all',
-  filter: 'newest',
+  filter: 'relevance',
+  books: [],
 };
 
 export const booksSlice = createSlice({
@@ -34,6 +37,12 @@ export const booksSlice = createSlice({
     },
     setSort(state: BooksState, action: PayloadAction<TSortFilter>) {
       state.filter = action.payload;
+    },
+    setBooks(state: BooksState, action: PayloadAction<BooksModel[]>) {
+      state.books = action.payload;
+    },
+    resetBooks(state: BooksState) {
+      state.books = [];
     },
     reset() {
       return initialState;

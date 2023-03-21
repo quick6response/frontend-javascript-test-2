@@ -16,6 +16,7 @@ export const FormInputSearch: FC<IFormInputSearch> = ({ onSubmit }) => {
       <FormControl sx={{ m: 1 }} variant="standard">
         <Input
           placeholder="Введите название"
+          value={searchTerm}
           onChange={(e) => booksActionsPanel.setSearchTerm(e.target.value)}
         />
         <Button disabled={searchTerm.length === 0} type="submit">
