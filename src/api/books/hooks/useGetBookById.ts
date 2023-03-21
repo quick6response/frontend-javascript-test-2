@@ -7,7 +7,7 @@ export const useGetBookById = (etag: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [error, setTextError] = useState<string>('');
-  const [data, setData] = useState<BooksModel>(null);
+  const [data, setData] = useState<BooksModel | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {

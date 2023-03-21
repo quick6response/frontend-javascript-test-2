@@ -19,6 +19,7 @@ export const BooksComponent = () => {
     isError,
     isMoreData,
     error,
+    isSuccess,
   } = useGetAllBooks();
 
   const onSubmitGetBooks = (event: FormEvent<HTMLFormElement>) => {
@@ -47,7 +48,7 @@ export const BooksComponent = () => {
 
       {isLoading && <CircularProgress />}
       {isError && <h1>{error}</h1>}
-      {!isLoading && data?.items.length > 0 ? (
+      {isSuccess && data && data?.items?.length > 0 ? (
         <>
           <div>Найдено {data.totalItems} книг(-и)</div>
           <Grid container spacing={1}>
